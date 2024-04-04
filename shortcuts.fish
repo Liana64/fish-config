@@ -1,4 +1,3 @@
-alias ans='cd /etc/ansible'
 alias c='clear'
 alias cc='cd && clear'
 alias e='exit'
