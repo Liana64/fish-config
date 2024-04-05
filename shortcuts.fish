@@ -16,6 +16,7 @@ alias mtr='metar $METAR_STATION'
 alias net='ss -tulpn'
 alias now='date +"%T"'
 
+alias p='realpath .'
 alias gp='git pull'
 alias gph='git pull --reset hard'
 
