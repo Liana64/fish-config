@@ -1,5 +1,0 @@
-alias dcu='docker compose up -d'
-alias dps='docker ps'
-alias dpsa='docker ps -a'
-alias dnls='docker network ls'
-alias dvls='docker volume ls'
