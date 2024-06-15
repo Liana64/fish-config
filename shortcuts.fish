@@ -36,7 +36,7 @@ alias weather='metar -d $METAR_STATION'
 
 # Ansible Shortcuts
 alias ans='cd /etc/ansible'
-alias ova='read -s VAULTKEY && export VAULTKEY'
+alias ova='eval "$(read -s VAULTKEY && export VAULTKEY)"'
 
 # Kube Shortcuts
 alias k='kubectl'
