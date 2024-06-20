@@ -1,0 +1,1 @@
+Adds a number of useful commands and shortcuts to fish shell, including a fortune. For help, type "helpcfg"
