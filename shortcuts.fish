@@ -1,4 +1,5 @@
 source ~/.config/fish/conf.d/.env
+set LIANASCFG_VERSION 1.00
 
 # Script Functions
 function create_tmux_workspaces
@@ -17,6 +18,7 @@ end
 alias editcfg='$EDITOR ~/.config/fish/conf.d/shortcuts.fish'
 alias helpcfg='cat ~/.config/fish/conf.d/shortcuts.fish | less'
 alias reloadcfg='source ~/.config/fish/conf.d/shortcuts.fish'
+alias versioncfg='echo $LIANASCFG_VERSION'
 
 # Personal Shortcuts
 alias weather='metar -d $METAR_STATION'
