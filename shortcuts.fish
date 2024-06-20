@@ -2,22 +2,49 @@ source ~/.config/fish/conf.d/.env
 export LIANACFG_VER=1.00
 
 # Script Functions
-function create_tmux_workspaces
+function fc_create_tmux_workspaces
   set quiet_mode $argv[1]
+  
   set workspaces (string split ',' $TMUX_WORKSPACES)
-
   for workspace in $workspaces
     tmux new -d -s $workspace
     if test "$quiet_mode" != "q"
       echo "Created tmux workspace: $workspace"
     end
   end
+  
+  set clusters (string split ',' $TMUX_WORKSPACES_CLUSTERS)
+  for cluster in $clusters
+    tmux new -d -s "cluster-$cluster"
+    if test "$quiet_mode" != "q"
+      echo "Created tmux workspace: cluster-$cluster"
+    end
+  end
+end
+
+function fc_add_ssh_keys
+  set working_dir $SSH_AGENT_WORKING_DIR
+  echo "Adding keys from $SSH_AGENT_WORKING_DIR"
+
+  if not test -d $working_dir
+    echo "Directory $working_dir does not exist"
+    return 1
+  end
+
+  for key in (find -L $SSH_AGENT_WORKING_DIR -type f)
+    eval ssh-add $key
+    if test $status -eq 0
+      echo "Added SSH key: $key"
+    else
+      echo "Failed to add SSH key: $key"
+    end
+  end
 end
 
 # Script Shortcuts
-alias editcfg='$EDITOR ~/.config/fish/conf.d/shortcuts.fish'
+alias editcfg='$EDITOR ~/.config/fish/conf.d/shortcuts.fish && reloadcfg'
 alias helpcfg='cat ~/.config/fish/conf.d/shortcuts.fish | less'
-alias reloadcfg='source ~/.config/fish/conf.d/shortcuts.fish'
+alias reloadcfg='source ~/.config/fish/conf.d/shortcuts.fish && echo "config updated"'
 alias versioncfg='echo $LIANACFG_VER'
 
 # Personal Shortcuts
@@ -51,7 +78,7 @@ alias pullh='git pull --reset hard'
 alias ssha='eval $(ssh-agent -c)'
 alias ssharm='ssh-agent -k'
 alias sshls='ssh-add -L'
-alias ssh-add-all='grep -slR "PRIVATE" $SSH_AGENT_WORKING_DIR | xargs echo && ssh-add'
+alias ssh-add-all='fc_add_ssh_keys'
 alias sshcfg='$EDITOR ~/.ssh/config'
 
 # Ansible Shortcuts
@@ -78,7 +105,7 @@ alias dnls='docker network ls'
 alias dvls='docker volume ls'
 
 # Tmux Shortcuts
-alias tmux-ws='create_tmux_workspaces'
+alias tws='fc_create_tmux_workspaces'
 alias tn='tmux new'
 alias tns='tmux new -s'
 alias tks='tmux kill-server'
