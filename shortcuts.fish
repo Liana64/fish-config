@@ -1,3 +1,10 @@
+###
+ ## Copyright (c) Liana64
+ ##
+ ## This source code is licensed under the MIT license found in the
+ ## LICENSE file in the root directory of this source tree.
+#########
+
 source ~/.config/fish/conf.d/.env
 export LIANACFG_VER=1.00
 
@@ -23,21 +30,30 @@ function fc_create_tmux_workspaces
 end
 
 function fc_add_ssh_keys
-  set working_dir $SSH_AGENT_WORKING_DIR
-  echo "Adding keys from $SSH_AGENT_WORKING_DIR"
+  set agents_dir $SSH_AGENTS_DIR
+  echo "Adding keys from $SSH_AGENTS_DIR"
 
-  if not test -d $working_dir
-    echo "Directory $working_dir does not exist"
+  if not test -d $agents_dir
+    echo "Directory $agents_dir does not exist"
     return 1
   end
 
-  for key in (find -L $SSH_AGENT_WORKING_DIR -type f)
+  for key in (find -L $SSH_AGENTS_DIR -type f)
     eval ssh-add $key
     if test $status -eq 0
       echo "Added SSH key: $key"
     else
       echo "Failed to add SSH key: $key"
     end
+  end
+end
+
+
+function fc_getweather
+  if test -n "$argv"
+    curl wttr.in/$argv
+  else
+    curl wttr.in/$WEATHER_CITY
   end
 end
 
@@ -48,22 +64,23 @@ alias reloadcfg='source ~/.config/fish/conf.d/shortcuts.fish && echo "config upd
 alias versioncfg='echo $LIANACFG_VER'
 
 # Personal Shortcuts
-alias weather='metar -d $METAR_STATION'
+alias weather='fc_getweather'
 
 # Main Shortcuts
 alias c='clear'
 alias cc='cd && clear'
 alias e='exit'
 alias exp='export'
+alias f='fabric'
 alias i='whoami'
 alias l='ls -laht'
-alias tmpdir='cd "$(mktemp -d)"'
+alias mktmp='cd "$(mktemp -d)"'
 alias now='date +"%T"'
 alias g='grep'
 alias rp='realpath .'
 alias s='sudo'
 alias ssu='sudo su -'
-alias sc='stat -c %a'
+alias stc='stat -c %a'
 alias src='source'
 
 ## Debian Shortcuts

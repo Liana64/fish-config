@@ -1,4 +1,10 @@
-# Credit: jorgebucaran/autopair.fish
+# CREDIT:   jorgebucaran/autopair.fish
+
+# NOTE:     This file is not a part of this project.
+#           It is here so that we may clone into the
+#           '~/.config/fish/conf.d/' folder without
+#           causing any issues.
+
 
 status is-interactive || exit
 
