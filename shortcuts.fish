@@ -65,6 +65,7 @@ alias versioncfg='echo $LIANACFG_VER'
 
 # Personal Shortcuts
 alias weather='fc_getweather'
+alias news='echo "" && curl -s https://brutalist.report/summary | sed -rn "s@(^.*<li>)(.*)(</li>)@\2\n@p" | sed "s|<strong>|• |g; s|</strong>||g"'
 
 # Main Shortcuts
 alias c='clear'
