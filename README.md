@@ -1,7 +1,5 @@
 # lianacfg
 
-## Features
-
 Adds a number of useful features and aliases to fish shell, including:
 
 - Management of SSH agents (type `ssha` and `ssh-add-all` or `ssharm` to clear)
@@ -15,7 +13,9 @@ Adds a number of useful features and aliases to fish shell, including:
 
 ## Installation
 
-Create an env file in `~/.config/fish/conf.d/` and configure the below variables as needed:
+Install fish and clone this repository directly into `~/.config/fish/conf.d/`
+
+Then, create an env file in `~/.config/fish/conf.d/` and configure the below variables as needed:
 
 Variable | Description
 -- | --
@@ -25,6 +25,8 @@ Variable | Description
 | TMUX_WORKSPACES_CLUSTERS | A list of tmux workspaces to create for working with clusters, parsed in order & comma-separated
 | DEFAULT_MODEL | The default AI model for use with [fabric](https://github.com/danielmiessler/fabric)
 
-## Help
+## Quick commands
 
-For help, type "helpcfg"
+- For help, type `helpcfg`
+- Reload the config with `reloadcfg`
+- Quickly edit the config with `editcfg`
