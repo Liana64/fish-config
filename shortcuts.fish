@@ -6,39 +6,33 @@
 #########
 
 source ~/.config/fish/conf.d/.env
-export LIANACFG_VER=1.00
+
+# Variables
+set LIANACFG_VER 1.01
 
 # Script Functions
 function fc_create_tmux_workspaces
   set quiet_mode $argv[1]
   
-  set workspaces (string split ',' $TMUX_WORKSPACES)
+  set workspaces (string split ',' $LIANACFG_TMUX_WORKSPACES)
   for workspace in $workspaces
     tmux new -d -s $workspace
     if test "$quiet_mode" != "q"
       echo "Created tmux workspace: $workspace"
     end
   end
-  
-  set clusters (string split ',' $TMUX_WORKSPACES_CLUSTERS)
-  for cluster in $clusters
-    tmux new -d -s "cluster-$cluster"
-    if test "$quiet_mode" != "q"
-      echo "Created tmux workspace: cluster-$cluster"
-    end
-  end
 end
 
 function fc_add_ssh_keys
-  set agents_dir $SSH_AGENTS_DIR
-  echo "Adding keys from $SSH_AGENTS_DIR"
+  set agents_dir $LIANACFG_SSH_AGENTS_DIR
+  echo "Adding keys from $LIANACFG_SSH_AGENTS_DIR"
 
   if not test -d $agents_dir
     echo "Directory $agents_dir does not exist"
     return 1
   end
 
-  for key in (find -L $SSH_AGENTS_DIR -type f)
+  for key in (find -L $LIANACFG_SSH_AGENTS_DIR -type f)
     eval ssh-add $key
     if test $status -eq 0
       echo "Added SSH key: $key"
@@ -53,15 +47,15 @@ function fc_getweather
   if test -n "$argv"
     curl wttr.in/$argv
   else
-    curl wttr.in/$WEATHER_CITY
+    curl wttr.in/$LIANACFG_WEATHER_CITY
   end
 end
 
 # Script Shortcuts
 alias editcfg='$EDITOR ~/.config/fish/conf.d/shortcuts.fish && reloadcfg'
 alias helpcfg='cat ~/.config/fish/conf.d/shortcuts.fish | less'
-alias reloadcfg='source ~/.config/fish/conf.d/shortcuts.fish && echo "config updated"'
-alias versioncfg='echo $LIANACFG_VER'
+alias reloadcfg='source ~/.config/fish/conf.d/shortcuts.fish && echo "Updated lianacfg"'
+alias versioncfg='echo v$LIANACFG_VER'
 
 # Personal Shortcuts
 alias weather='fc_getweather'
@@ -74,6 +68,7 @@ alias e='exit'
 alias exp='export'
 alias f='fabric'
 alias g='grep'
+alias hex='openssl rand -hex'
 alias i='whoami'
 alias l='ls -laht'
 alias mktmp='cd "$(mktemp -d)"'
@@ -95,9 +90,9 @@ alias pullh='git pull --reset hard'
 # SSH Shortcuts
 alias ssha='eval $(ssh-agent -c)'
 alias ssharm='ssh-agent -k'
+alias sshcfg='$EDITOR ~/.ssh/config'
 alias sshls='ssh-add -L'
 alias ssh-add-all='fc_add_ssh_keys'
-alias sshcfg='$EDITOR ~/.ssh/config'
 
 # Ansible Shortcuts
 alias ans='cd /etc/ansible'
@@ -116,16 +111,17 @@ alias kdk='kubectl delete -k'
 alias kdf='kubectl delete -f'
 
 # Docker Shortcuts
+alias dcd='docker compose down'
 alias dcu='docker compose up -d'
+alias dnls='docker network ls'
 alias dps='docker ps'
 alias dpsa='docker ps -a'
-alias dnls='docker network ls'
 alias dvls='docker volume ls'
 
 # Tmux Shortcuts
-alias tws='fc_create_tmux_workspaces'
-alias tn='tmux new'
-alias tns='tmux new -s'
+alias t='tmux a -t'
 alias tks='tmux kill-server'
 alias tls='tmux ls'
-alias ta='tmux a -t'
+alias tn='tmux new'
+alias tns='tmux new -s'
+alias tws='fc_create_tmux_workspaces'
