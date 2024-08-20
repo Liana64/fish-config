@@ -20,6 +20,7 @@ Then, create an env file in `~/.config/fish/conf.d/` and configure the below var
 
 Variable | Description
 -- | --
+| LIANACFG_DEBUG | Show debug messages when `true`
 | LIANACFG_PATH | Where this repository is located
 | LIANACFG_PATHS_OSX | A list of folders to append to the system path, if the detected OS is "Darwin"
 | LIANACFG_WEATHER_CITY | City to pull weather reports for
@@ -30,4 +31,6 @@ Variable | Description
 
 - For help, type `helpcfg`
 - Reload the config with `reloadcfg`
+- Reload the environment with `reloadenv`
 - Quickly edit the config with `editcfg`
+- Quickly edit the environment with `editenv`
