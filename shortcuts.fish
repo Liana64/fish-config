@@ -5,14 +5,14 @@
  ## LICENSE file in the root directory of this source tree.
 #########
 
-source ~/.config/fish/conf.d/.env
-
 # Variables
-set -g LIANACFG_VER 1.02
-set -g LIANACFG_DEBUG true
+set -g LIANACFG_VER 1.03
+set -g LIANACFG_PATH ~/.config/fish/conf.d/
 set -g LIANACFG_OS (uname)
 
-# Script Functions
+source $LIANACFG_PATH/.env
+
+# Functions
 function fc_load_paths
   if test "$LIANACFG_OS" = "Darwin"
     for path_appendage in $LIANACFG_PATHS_OSX
@@ -59,10 +59,10 @@ function fc_create_tmux_workspaces
   set workspaces (string split ',' $LIANACFG_TMUX_WORKSPACES)
   for workspace in $workspaces
     tmux new -d -s $workspace
-    if test "$quiet_mode" != "q"
-      fc_log debug "Created tmux workspace: $workspace"
-      fc_log info "Finished creating workspaces"
-    end
+    fc_log debug "Created tmux workspace: $workspace"
+  end
+  if test "$quiet_mode" != "q"
+    fc_log info "Finished creating workspaces"
   end
 end
 
@@ -98,11 +98,12 @@ end
 fc_load_paths
 
 # Script Shortcuts
-alias editcfg='$EDITOR ~/.config/fish/conf.d/shortcuts.fish && reloadcfg'
-alias editenv='$EDITOR ~/.config/fish/conf.d/.env && reloadenv'
-alias helpcfg='cat ~/.config/fish/conf.d/shortcuts.fish | less'
-alias reloadenv='source ~/.config/fish/conf.d/.env && fc_log info "Updated environment"'
-alias reloadcfg='source ~/.config/fish/conf.d/shortcuts.fish && fc_log info "Updated config"'
+alias editcfg='$EDITOR $LIANACFG_PATH/shortcuts.fish && reloadcfg'
+alias editenv='$EDITOR $LIANACFG_PATH/.env && reloadenv'
+alias helpcfg='cat $LIANACFG_PATH/shortcuts.fish | less'
+alias lianacfg='cd $LIANACFG_PATH'
+alias reloadenv='source $LIANACFG_PATH/.env && fc_log info "Updated environment"'
+alias reloadcfg='source $LIANACFG_PATH/shortcuts.fish && fc_log info "Updated config"'
 alias versioncfg='fc_log info v$LIANACFG_VER'
 
 # Personal Shortcuts
