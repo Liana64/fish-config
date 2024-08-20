@@ -8,9 +8,51 @@
 source ~/.config/fish/conf.d/.env
 
 # Variables
-set LIANACFG_VER 1.01
+set -g LIANACFG_VER 1.02
+set -g LIANACFG_DEBUG true
+set -g LIANACFG_OS (uname)
 
 # Script Functions
+function fc_load_paths
+  if test "$LIANACFG_OS" = "Darwin"
+    for path_appendage in $LIANACFG_PATHS_OSX
+      if test -d $path_appendage
+        if not contains $path_appendage $PATH
+          fish_add_path $path_appendage
+          fc_log debug "Added $path_appendage"
+        end
+      end  
+    end  
+  end      
+end
+
+function fc_log --argument log_level -- $argv
+  if test "$LIANACFG_DEBUG" != "true" -a "$log_level" = "debug"
+      return 0
+  end
+  set_color --bold
+  switch $log_level
+    case debug
+      set_color --bold green
+      echo -n '['(set_color normal white)'DEBUG'(set_color --bold green)']'
+    case info
+      set_color --bold blue
+      echo -n '['(set_color normal white)'INFO'(set_color --bold blue)']'
+    case warning
+      set_color --bold yellow
+      echo -n '['(set_color normal black)'WARNING'(set_color --bold yellow)']'
+    case error
+      set_color --bold red
+      echo -n "["(set_color normal white)'ERROR'(set_color --bold red)']'
+    case '*'
+      echo "Invalid log level: $log_level"
+      return 1
+  end
+
+  set_color normal
+  echo " $argv[2]"
+end
+
 function fc_create_tmux_workspaces
   set quiet_mode $argv[1]
   
@@ -18,26 +60,27 @@ function fc_create_tmux_workspaces
   for workspace in $workspaces
     tmux new -d -s $workspace
     if test "$quiet_mode" != "q"
-      echo "Created tmux workspace: $workspace"
+      fc_log debug "Created tmux workspace: $workspace"
+      fc_log info "Finished creating workspaces"
     end
   end
 end
 
 function fc_add_ssh_keys
   set agents_dir $LIANACFG_SSH_AGENTS_DIR
-  echo "Adding keys from $LIANACFG_SSH_AGENTS_DIR"
+  fc_log debug "Adding keys from $LIANACFG_SSH_AGENTS_DIR"
 
   if not test -d $agents_dir
-    echo "Directory $agents_dir does not exist"
+    fc_log error "Directory $agents_dir does not exist"
     return 1
   end
 
   for key in (find -L $LIANACFG_SSH_AGENTS_DIR -type f)
     eval ssh-add $key
     if test $status -eq 0
-      echo "Added SSH key: $key"
+      fc_log debug "Added SSH key: $key"
     else
-      echo "Failed to add SSH key: $key"
+      fc_log error "Failed to add SSH key: $key"
     end
   end
 end
@@ -51,11 +94,16 @@ function fc_getweather
   end
 end
 
+# Main
+fc_load_paths
+
 # Script Shortcuts
 alias editcfg='$EDITOR ~/.config/fish/conf.d/shortcuts.fish && reloadcfg'
+alias editenv='$EDITOR ~/.config/fish/conf.d/.env && reloadenv'
 alias helpcfg='cat ~/.config/fish/conf.d/shortcuts.fish | less'
-alias reloadcfg='source ~/.config/fish/conf.d/shortcuts.fish && echo "Updated lianacfg"'
-alias versioncfg='echo v$LIANACFG_VER'
+alias reloadenv='source ~/.config/fish/conf.d/.env && fc_log info "Updated environment"'
+alias reloadcfg='source ~/.config/fish/conf.d/shortcuts.fish && fc_log info "Updated config"'
+alias versioncfg='fc_log info v$LIANACFG_VER'
 
 # Personal Shortcuts
 alias weather='fc_getweather'
