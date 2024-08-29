@@ -6,13 +6,32 @@
 #########
 
 # Variables
-set -g LIANACFG_VER 1.04
+set -g LIANACFG_VER 1.05
 set -g LIANACFG_PATH ~/.config/fish/conf.d
 set -g LIANACFG_OS (uname)
 
 source $LIANACFG_PATH/.env
 
 # Functions
+function !!
+  set var (history | head -n 1)
+
+  if test $var = "!!"
+    fc_log info "Paradox detected. Stop that."
+    return 1
+  end
+
+  if test $argv 
+    if test $argv = "sudo"
+      eval $argv $var
+    else
+      eval $var $argv
+    end
+  else
+    eval $var
+  end
+end
+
 function fc_load_paths
   if test "$LIANACFG_OS" = "Darwin"
     for path_appendage in $LIANACFG_PATHS_OSX
@@ -85,7 +104,6 @@ function fc_add_ssh_keys
   end
 end
 
-
 function fc_getweather
   if test -n "$argv"
     curl wttr.in/$argv
@@ -125,6 +143,7 @@ alias hex='openssl rand -hex'
 alias i='whoami'
 alias l='ls -laht'
 alias mktmp='cd "$(mktemp -d)"'
+alias n='$EDITOR'
 alias now='date +"%T"'
 alias r='sudo su -'
 alias rp='realpath'
