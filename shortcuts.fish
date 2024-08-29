@@ -6,8 +6,8 @@
 #########
 
 # Variables
-set -g LIANACFG_VER 1.03
-set -g LIANACFG_PATH ~/.config/fish/conf.d/
+set -g LIANACFG_VER 1.04
+set -g LIANACFG_PATH ~/.config/fish/conf.d
 set -g LIANACFG_OS (uname)
 
 source $LIANACFG_PATH/.env
@@ -110,6 +110,10 @@ alias versioncfg='fc_log info v$LIANACFG_VER'
 alias weather='fc_getweather'
 alias news='echo "" && curl -s https://brutalist.report/summary | sed -rn "s@(^.*<li>)(.*)(</li>)@\2\n@p" | sed "s|<strong>|• |g; s|</strong>||g"'
 
+# Replacements
+alias cat='batcat'
+alias nfetch='echo && echo && neofetch'
+
 # Main Shortcuts
 alias c='clear'
 alias cc='cd && clear'
@@ -123,10 +127,8 @@ alias l='ls -laht'
 alias mktmp='cd "$(mktemp -d)"'
 alias now='date +"%T"'
 alias r='sudo su -'
-alias rp='realpath .'
+alias rp='realpath'
 alias s='sudo'
-alias stc='stat -c %a'
-alias src='source'
 
 ## Debian Shortcuts
 alias u='sudo apt update'
@@ -146,6 +148,7 @@ alias ssh-add-all='fc_add_ssh_keys'
 # Ansible Shortcuts
 alias ans='cd /etc/ansible'
 alias ova='eval "$(read -s VAULTKEY && export VAULTKEY)"'
+alias v='ansible-vault'
 
 # Kubernetes Shortcuts
 alias k='kubectl'
@@ -160,12 +163,10 @@ alias kdk='kubectl delete -k'
 alias kdf='kubectl delete -f'
 
 # Docker Shortcuts
-alias dcd='docker compose down'
-alias dcu='docker compose up -d'
-alias dnls='docker network ls'
-alias dps='docker ps'
-alias dpsa='docker ps -a'
-alias dvls='docker volume ls'
+alias d='docker'
+alias dc='docker compose'
+alias dn='docker network'
+alias dv='docker volume'
 
 # Tmux Shortcuts
 alias t='tmux a -t'
